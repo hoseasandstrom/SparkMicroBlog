@@ -1,17 +1,17 @@
 <html>
 <body>
-{{Hello, {{name}}
+{{Messages by, {{name}}
 <br>
 <br>
-<form action="/logout", method="post">
-    <button type="submit">Logout</button>
 </form>
 <ol>
-    {{#users}}
+    {{#contents}}
     <li>
-        {{name}}
+        {{content}}
     </li>
-    {{/users}}
+    {{/contents}}
 </ol>
+<form action="/logout", method="post">
+    <button type="submit">Logout</button>
 </body>
 </html>

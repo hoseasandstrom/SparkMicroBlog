@@ -9,7 +9,8 @@ import java.util.HashMap;
 
 public class Main {
     static User user;
-    static Message content;
+    static User password;
+    static Message userContent;
     static ArrayList<User> userList = new ArrayList<>();
     static ArrayList<Message> messageContent = new ArrayList<>();
 
@@ -21,36 +22,35 @@ public class Main {
             HashMap stuff = new HashMap();
             if (user == null) {
                 return new ModelAndView(stuff, "login.html");
-            } else {
+            }
+            else {
                 stuff.put("name", user.name);
                 stuff.put("users", userList);
+                stuff.put("usermesage", userContent.content);
+                stuff.put("contents", messageContent);
+                return new ModelAndView(stuff, "index.html");
             }
-             if(content == null) {
-                 return new ModelAndView(stuff, "messages.html");
-             } else {
-                 stuff.put("content", content.content);
-                 stuff.put("contents", messageContent);
-                 return new ModelAndView(stuff, "index.html");
-             }
         },
             new MustacheTemplateEngine()
     );
     Spark.post(
             "/login",
             (request, response) -> {
-            String username = request.queryParams("username");
-            user = new User(username);
-            userList.add(user);
-            response.redirect("/messages");
-            return "";
-            }
+                String username = request.queryParams("username");
+                user = new User(username);
+                userList.add(user);
+                String userPassword = request.queryParams("password");
+                password = new User(userPassword);
+                response.redirect("/");
+                return "";
+                }
         );
         Spark.post(
                 "/messages",
                 (request, response) -> {
                     String userMessage = request.queryParams("usermessage");
-                    content = new Message(userMessage);
-                    messageContent.add(content);
+                    userContent = new Message(userMessage);
+                    messageContent.add(userContent);
                     response.redirect("/");
                     return "";
                 }

@@ -14,7 +14,6 @@ public class Main {
     public static void main(String[] args) {
         HashMap<String, User> userMap = new HashMap<String, User>();
         Spark.staticFileLocation("public");
-
         Spark.init();
         Spark.get(
                 "/",
@@ -27,8 +26,8 @@ public class Main {
                         return new ModelAndView(m, "index.html");
                     } else {
                         User user = userMap.get(username);
-                        m.put("name", user.name);
                         m.put("messages", user.messageList);
+                        m.put("username", user.name);
                         return new ModelAndView(m, "messages.html");
                     }
                 },
@@ -51,7 +50,7 @@ public class Main {
                         throw new Exception("Invalid password");
                     }
                     Session session = request.session();
-                    session.attribute(name, user);
+                    session.attribute("username", name);
 
                     response.redirect("/");
                     return "";
@@ -67,8 +66,7 @@ public class Main {
                     }
 
                     String text = request.queryParams("usermessage");
-                    Message nM = new Message(text);
-                    user.messageList.add(nM);
+                    user.messageList.add(new Message(text));
 
                     response.redirect("/");
                     return "";
@@ -110,11 +108,20 @@ public class Main {
                         throw new Exception("Invalid id");
 
                 }
-                    user.messageList.forEach(message -> request.contentType());
+                    user.messageList.forEach(message -> request.queryString());
 
                     response.redirect("/");
                     return"";
 
+                }
+        );
+        Spark.post(
+                "/logout",
+                (request, response) -> {
+                    Session session = request.session();
+                    session.invalidate();
+                    response.redirect("/");
+                    return "/";
                 }
         );
     }

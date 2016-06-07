@@ -10,4 +10,8 @@ public class Message {
         this.text = text;
 
     }
+
+    public String getText() {
+        return text;
+    }
 }

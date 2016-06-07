@@ -15,4 +15,26 @@ public class User {
         this.name = name;
         this.password = password;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public ArrayList<Message> getMessageList() {
+        return messageList;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", messageList=" + messageList +
+                '}';
+    }
 }
+

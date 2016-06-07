@@ -1,38 +1,40 @@
 <html>
+
 <body>
-<h4>Got something to say?</h4>
-<form form_id="form1" action="/create-message" method="post">
+Got something to say?
+
+<form action="/create-message" method="post">
     <input type="text" name="usermessage" placeholder="Type your message here:">
     <br>
-    <button type="submit"><strong>Submit</strong></button>
+    <button type="submit">Submit</button>
 </form>
 <br>
-<p><strong>Type the number of the message you would like to delete:</strong></p>
+
+Select the number of the message you would like to delete:
 <form action="/delete-message" method="post">
     <input type="number" name="deleteid" placeholder="#"/>
     <br>
-    <button type="submit"><strong>Delete</strong></button>
+    <button type="submit">Delete</button>
 </form>
+
 <br>
-<p><strong>Need to edit a message?</strong></p>
-<p>Type the number below:</p>
+Need to edit a message?
+<br>
+Select the number below:
 <form action="/edit-message" method="post">
     <input type="number" name="editid" placeholder="#"/>
     <br>
-    <button type="submit"><strong>Edit</strong></button>
+    <button type="submit">Edit</button>
 
 </form>
-<p>
-    {{name}}'s Messages:
-    </p>
-<br>
-<p>
+Messages from:
+    {{username}}
 <ol>
     {{#messages}}
     <li>{{text}}</li>
     {{/messages}}
 </ol>
-</p>
+
 
 </body>
 </html>

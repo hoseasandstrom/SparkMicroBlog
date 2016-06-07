@@ -9,47 +9,38 @@ import java.util.HashMap;
 
 public class Main {
     static User user;
-    static String password;
-    static Message message;
-    static ArrayList<User> userList;
-    static ArrayList<String> passwordList;
+    static Message currentmessage;
     static ArrayList<Message> messageList;
 
     public static void main(String[] args) {
+        HashMap<String, User> userMap = new HashMap<String, User>();
         Spark.init();
         Spark.get(
                 "/",
                 (request, response) -> {
-                    HashMap stuff = new HashMap();
                     if (user == null) {
-                        return new ModelAndView(stuff, "messages.html");
+                        return new ModelAndView(userMap, "index.html");
                     } else {
-                        stuff.put("name", user.name);
-                        stuff.put("users", userList);
-                        stuff.put("message", message.message);
-                        stuff.put("messages", messageList);
-                        return new ModelAndView(stuff, "index.html");
+                        return new ModelAndView(userMap, "messages.html");
                     }
                 },
                     new MustacheTemplateEngine()
         );
-
         Spark.post(
                 "/create-user",
                 (request, response) -> {
                     String username = request.queryParams("username");
-                    user = new User(username);
-                    userList.add(user);
-                    response.redirect("/");
-                    return "";
-                }
-        );
-        Spark.post(
-                "/create-password",
-                (request, response) -> {
-                    String userpassword = request.queryParams("userpassword");
-                    password = new String(userpassword);
-                    passwordList.add(password);
+                    String password = request.queryParams("userpassword");
+                    if (userMap.containsKey(username) && password.equals(password)) {
+                        response.redirect("/");
+                        return "";
+                    } else if (userMap.containsKey(username) && password != password){
+                        response.redirect("/create-user");
+                    }
+                    else {
+                        user = new User(password, username);
+                        userMap.put("username", user);
+                    }
                     response.redirect("/");
                     return "";
                 }
@@ -57,9 +48,9 @@ public class Main {
         Spark.post(
                 "/create-message",
                 (request, response) -> {
-                    String usermessage = request.queryParams("usermessage");
-                    message = new Message(usermessage);
-                    messageList.add(message);
+                    String message = request.queryParams("usermessage");
+                    currentmessage = new Message(message);
+                    messageList.add(currentmessage);
                     response.redirect("/");
                     return "";
                 }

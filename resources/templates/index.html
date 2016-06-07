@@ -1,18 +1,11 @@
 <html>
 <body>
-{{Messages by, {{name}}
-<br>
-<br>
-<form action="/create-message" method="post">
-    <input type="text" message="usermessage" placeholder="Enter your message"/>
-    <button type="submit">Submit</button>
-    </form>
-<ol>
-    {{#messages}}
-    <li>
-        {{message}}
-    </li>
-    {{/messsages}}
-</ol>
+
+<form action="/create-user" method = "post">
+    <input type="text" name="username" placeholder="Enter your name"/>
+    <input type ="text" name="userpassword" placeholder="Enter your password"/>
+    <button type="submit">Login</button>
+</form>
+
 </body>
 </html>

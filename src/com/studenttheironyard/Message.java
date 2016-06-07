@@ -4,9 +4,9 @@ package com.studenttheironyard;
  * Created by hoseasandstrom on 6/6/16.
  */
 public class Message {
-    String message;
+    String text;
 
-    public Message(String message) {
-        this.message = message;
+    public Message(String text) {
+        this.text = text;
     }
 }

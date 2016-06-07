@@ -9,11 +9,12 @@ import java.util.HashMap;
 
 public class Main {
     static User user;
-    static Message currentmessage;
     static ArrayList<Message> messageList = new ArrayList<>();
 
     public static void main(String[] args) {
         HashMap<String, User> userMap = new HashMap<String, User>();
+        Spark.staticFileLocation("public");
+
         Spark.init();
         Spark.get(
                 "/",
@@ -51,9 +52,9 @@ public class Main {
         Spark.post(
                 "/create-message",
                 (request, response) -> {
-                    String message = request.queryParams("usermessage");
-                    currentmessage = new Message(message);
-                    messageList.add(currentmessage);
+                    String text = request.queryParams("usermessage");
+                    Message message = new Message(text);
+                    messageList.add(message);
                     response.redirect("/");
                     return "";
                 }

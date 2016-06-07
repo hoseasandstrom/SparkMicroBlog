@@ -10,7 +10,7 @@ import java.util.HashMap;
 public class Main {
     static User user;
     static Message currentmessage;
-    static ArrayList<Message> messageList;
+    static ArrayList<Message> messageList = new ArrayList<>();
 
     public static void main(String[] args) {
         HashMap<String, User> userMap = new HashMap<String, User>();
@@ -18,10 +18,13 @@ public class Main {
         Spark.get(
                 "/",
                 (request, response) -> {
+                    HashMap m = new HashMap();
                     if (user == null) {
-                        return new ModelAndView(userMap, "index.html");
+                        return new ModelAndView(m, "index.html");
                     } else {
-                        return new ModelAndView(userMap, "messages.html");
+                        m.put("messages", messageList);
+                        m.put("name", user.name);
+                        return new ModelAndView(m, "messages.html");
                     }
                 },
                     new MustacheTemplateEngine()
@@ -31,15 +34,15 @@ public class Main {
                 (request, response) -> {
                     String username = request.queryParams("username");
                     String password = request.queryParams("userpassword");
-                    if (userMap.containsKey(username) && password.equals(password)) {
+                    if (!userMap.containsKey(username)) {
+                        user = new User(username, password);
+                        userMap.put(username, user);
                         response.redirect("/");
                         return "";
-                    } else if (userMap.containsKey(username) && password != password){
-                        response.redirect("/create-user");
                     }
-                    else {
-                        user = new User(password, username);
-                        userMap.put("username", user);
+                    else if (password.equals(userMap.get(username).password)){
+                        user = userMap.get(username);
+                        response.redirect("/");
                     }
                     response.redirect("/");
                     return "";

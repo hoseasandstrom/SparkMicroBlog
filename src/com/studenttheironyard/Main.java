@@ -47,8 +47,8 @@ public class Main {
         Spark.post(
                 "/create-password",
                 (request, response) -> {
-                    String userPassword = request.queryParams("userpassword");
-                    password = new String(userPassword);
+                    String userpassword = request.queryParams("userpassword");
+                    password = new String(userpassword);
                     passwordList.add(password);
                     response.redirect("/");
                     return "";

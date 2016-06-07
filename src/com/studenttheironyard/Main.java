@@ -9,59 +9,60 @@ import java.util.HashMap;
 
 public class Main {
     static User user;
-    static User password;
-    static Message userContent;
-    static ArrayList<User> userList = new ArrayList<>();
-    static ArrayList<Message> messageContent = new ArrayList<>();
+    static String password;
+    static Message message;
+    static ArrayList<User> userList;
+    static ArrayList<String> passwordList;
+    static ArrayList<Message> messageList;
 
     public static void main(String[] args) {
         Spark.init();
         Spark.get(
                 "/",
                 (request, response) -> {
-            HashMap stuff = new HashMap();
-            if (user == null) {
-                return new ModelAndView(stuff, "login.html");
-            }
-            else {
-                stuff.put("name", user.name);
-                stuff.put("users", userList);
-                stuff.put("usermesage", userContent.content);
-                stuff.put("contents", messageContent);
-                return new ModelAndView(stuff, "index.html");
-            }
-        },
-            new MustacheTemplateEngine()
-    );
-    Spark.post(
-            "/login",
-            (request, response) -> {
-                String username = request.queryParams("username");
-                user = new User(username);
-                userList.add(user);
-                String userPassword = request.queryParams("password");
-                password = new User(userPassword);
-                response.redirect("/");
-                return "";
-                }
+                    HashMap stuff = new HashMap();
+                    if (user == null) {
+                        return new ModelAndView(stuff, "messages.html");
+                    } else {
+                        stuff.put("name", user.name);
+                        stuff.put("users", userList);
+                        stuff.put("message", message.message);
+                        stuff.put("messages", messageList);
+                        return new ModelAndView(stuff, "index.html");
+                    }
+                },
+                    new MustacheTemplateEngine()
         );
+
         Spark.post(
-                "/messages",
+                "/create-user",
                 (request, response) -> {
-                    String userMessage = request.queryParams("usermessage");
-                    userContent = new Message(userMessage);
-                    messageContent.add(userContent);
+                    String username = request.queryParams("username");
+                    user = new User(username);
+                    userList.add(user);
                     response.redirect("/");
                     return "";
                 }
         );
-    Spark.post (
-            "/logout",
-            (request, response) -> {
-            user = null;
-            response.redirect("/");
-            return "";
-            }
+        Spark.post(
+                "/create-password",
+                (request, response) -> {
+                    String userPassword = request.queryParams("password");
+                    password = new String(userPassword);
+                    passwordList.add(password);
+                    response.redirect("/");
+                    return "";
+                }
+        );
+        Spark.post(
+                "/create-message",
+                (request, response) -> {
+                    String messagecontent = request.queryParams("usermessage");
+                    message = new Message(messagecontent);
+                    messageList.add(message);
+                    response.redirect("/");
+                    return "";
+                }
         );
     }
 }

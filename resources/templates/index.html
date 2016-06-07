@@ -3,15 +3,16 @@
 {{Messages by, {{name}}
 <br>
 <br>
-</form>
+<form action="/create-message" method="post">
+    <input type="text" message="messagecontent" placeholder="Enter your message"/>
+    <button type="submit">Submit</button>
+    </form>
 <ol>
-    {{#contents}}
+    {{#messages}}
     <li>
-        {{content}}
+        {{message}}
     </li>
-    {{/contents}}
+    {{/messsages}}
 </ol>
-<form action="/logout", method="post">
-    <button type="submit">Logout</button>
 </body>
 </html>

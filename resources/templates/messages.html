@@ -23,6 +23,7 @@ Need to edit a message?
 Select the number below:
 <form action="/edit-message" method="post">
     <input type="number" name="editid" placeholder="#"/>
+    <input type="number" name="edittext" placeholder="Edit the message">
     <br>
     <button type="submit">Edit</button>
 
@@ -30,9 +31,9 @@ Select the number below:
 Messages from:
     {{username}}
 <ol>
-    {{#messages}}
+    {{#messagelist}}
     <li>{{text}}</li>
-    {{/messages}}
+    {{/messagelist}}
 </ol>
 
 

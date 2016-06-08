@@ -98,17 +98,19 @@ public class Main {
                 (request, response) -> {
                     Session session = request.session();
                     String username = session.attribute("username");
+                    String editText = request.queryParams("newText");
+                    User user = userMap.get(username);
                         if(username == null) {
                             throw new Exception("You must be logged in to do that");
                     }
+
                     int editid = Integer.valueOf(request.queryParams("editid"));
 
-                    User user = userMap.get(username);
                     if (editid <= 0 || editid - 1 >= user.messageList.size()) {
                         throw new Exception("Invalid id");
 
                 }
-                    user.messageList.forEach(message -> request.queryString());
+                    user.messageList.set(editid - 1,new Message(editText));
 
                     response.redirect("/");
                     return"";

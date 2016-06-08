@@ -5,6 +5,7 @@ package com.studenttheironyard;
  */
 public class Message {
     String text;
+    int id;
 
     public Message(String text) {
         this.text = text;

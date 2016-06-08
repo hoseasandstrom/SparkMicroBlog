@@ -8,11 +8,10 @@ import spark.template.mustache.MustacheTemplateEngine;
 import java.util.HashMap;
 
 public class Main {
-    static User user;
+    static HashMap<String, User> userMap = new HashMap<>();
 
 
     public static void main(String[] args) {
-        HashMap<String, User> userMap = new HashMap<String, User>();
         Spark.staticFileLocation("public");
         Spark.init();
         Spark.get(
@@ -21,13 +20,18 @@ public class Main {
                     Session session = request.session();
                     String username = session.attribute("username");
 
+                    User user = userMap.get(username);
+
                     HashMap m = new HashMap();
                     if (user == null) {
                         return new ModelAndView(m, "index.html");
                     } else {
-                        User user = userMap.get(username);
+                        int id = 1;
+                        for (Message msg : user.messageList) {
+                            msg.id = id;
+                            id++;
+                        }
                         m.put("messages", user.messageList);
-                        m.put("username", user.name);
                         return new ModelAndView(m, "messages.html");
                     }
                 },
@@ -38,12 +42,13 @@ public class Main {
                 (request, response) -> {
                     String name = request.queryParams("username");
                     String password = request.queryParams("userpassword");
+
+                    User user = userMap.get(name);
                     if (name == null || password == null) {
                         throw new Exception("Name or Password not entered");
                     }
                     if (user == null) {
                         user = new User(name, password);
-                        User user = new User(name, password);
                         userMap.put(name, user);
                     }
                     else if (!password.equals(user.password)){
@@ -61,6 +66,8 @@ public class Main {
                 (request, response) -> {
                     Session session = request.session();
                     String username = session.attribute("username");
+                    User user = userMap.get(username);
+
                     if (username == null) {
                         throw new Exception("Not logged in");
                     }
@@ -80,14 +87,14 @@ public class Main {
                     if(username == null) {
                         throw new Exception("You must be logged in to do that");
                     }
-                    int deleteid = Integer.valueOf(request.queryParams("deleteid"));
+                    int id = Integer.valueOf(request.queryParams("deleteid"));
 
                     User user = userMap.get(username);
-                    if (deleteid <= 0 || deleteid - 1 >= user.messageList.size()) {
+                    if (id <= 0 || id - 1 >= user.messageList.size()) {
                         throw new Exception("Invalid id");
                     }
 
-                    user.messageList.remove(deleteid - 1);
+                    user.messageList.remove(id - 1);
 
                     response.redirect("/");
                     return "";
@@ -98,19 +105,18 @@ public class Main {
                 (request, response) -> {
                     Session session = request.session();
                     String username = session.attribute("username");
-                    String editText = request.queryParams("newText");
                     User user = userMap.get(username);
                         if(username == null) {
                             throw new Exception("You must be logged in to do that");
                     }
+                    int id  = Integer.valueOf(request.queryParams("id"));
+                    String text = request.queryParams("text");
 
-                    int editid = Integer.valueOf(request.queryParams("editid"));
-
-                    if (editid <= 0 || editid - 1 >= user.messageList.size()) {
+                    if (id <= 0 || id - 1 >= user.messageList.size()) {
                         throw new Exception("Invalid id");
 
                 }
-                    user.messageList.set(editid - 1,new Message(editText));
+                    user.messageList.set(id - 1,new Message(text));
 
                     response.redirect("/");
                     return"";
